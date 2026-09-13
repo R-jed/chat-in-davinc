@@ -182,7 +182,7 @@ Agent 可以参与提出候选、编写评测与分析失败轨迹。生产运�
 | 当前 System Spine 根据当轮文本提取可规划的特定 mutation；提取器使用明确词句及否定/教学过滤 | 这是受限行为闸门。扩展长任务前，应验证“继续”、纠正及范围未变时的意图连续性；不能简单删除限制来解决易用性 | [system-spine.ts](/Users/qunqing/2026-Project-Agent/chat-in-davinci/src/main/system-spine.ts:177)、[agent-action-catalog.ts](/Users/qunqing/2026-Project-Agent/chat-in-davinci/src/main/agent-action-catalog.ts:300) |
 | COS 的 `session_finish` 使用 CID CompletionReport 判定 released/held，而不把模型 summary 当证据 | 保留这条权责边界；增强 CID 的验收语义，不另建一个自行宣告成功的 CID Goal Loop | [runtime.ts](/Users/qunqing/2026-Project-Agent/chat-in-davinci/src/cos-host/runtime.ts:570) |
 
-`AGENT_SYSTEM_SPEC.md` 已提出按决策价值选择行动、完整 Capability Pack、渐进披露及 ACI 评测。这次建议是将这些原则变成更精确的行为与验收，不是重新定义系统方向。参见 [决策成本原则](/Users/qunqing/2026-Project-Agent/chat-in-davinci/AGENT_SYSTEM_SPEC.md:762) 和 [能力增长合同](/Users/qunqing/2026-Project-Agent/chat-in-davinci/AGENT_SYSTEM_SPEC.md:869)。
+`AGENT_SYSTEM_SPEC.md` 已提出按决策价值选择行动、完整 Capability Pack、渐进披露及 ACI 评测。这次建议是将这些原则变成更精确的行为与验收，不是重新定义系统方向。参见 [决策成本原则](/Users/qunqing/2026-Project-Agent/chat-in-davinci/docs/development/AGENT_SYSTEM_SPEC.md:762) 和 [能力增长合同](/Users/qunqing/2026-Project-Agent/chat-in-davinci/docs/development/AGENT_SYSTEM_SPEC.md:869)。
 
 本轮相关性最大的优先级如下：
 

@@ -6,7 +6,7 @@ Blackmagic 官方 Scripting API 是主要 live 能力层。公开 API 确实覆�
 
 当前项目仍处于开发阶段。CID 的 ToolKernel / CallContext、ResolveScheduler、World Model/Context Compiler 和受保护 Plan / 本机 approval / durable execute 安全链已经存在。目标架构使用 COS 作为 ChatGPT Web / Conversation / Session / Goal / Prime-Worker 运行时；CID 拥有最终 Codex-style Sidebar/Conversation 视觉投影、Workspace/Resolve Project 绑定、Resolve Artifact Workspace、Tunnel/MCP Gateway 和完整 DaVinci 语义/安全执行层。
 
-系统级设计以 `AGENT_SYSTEM_SPEC.md` 为准。核心不是继续增加工具数量，而是形成一座 Agent 可读的链接抽象塔：
+系统级设计以 `docs/development/AGENT_SYSTEM_SPEC.md` 为准。核心不是继续增加工具数量，而是形成一座 Agent 可读的链接抽象塔：
 
 ```text
 GoalFrame / TaskGraph
@@ -471,7 +471,7 @@ Project Location 记录是未来受保护 Workflow 的路径授权材料。它�
 
 ## 10. 下一步开发顺序
 
-`IMPLEMENTATION_PLAN.md` 记录初步实施路线和验收门。实际下一步以当前用户目标、真实源码状态和已资格化的 Resolve 能力为准，不把文档顺序当作硬约束。
+`docs/development/IMPLEMENTATION_PLAN.md` 记录初步实施路线和验收门。实际下一步以当前用户目标、真实源码状态和已资格化的 Resolve 能力为准，不把文档顺序当作硬约束。
 
 当前 forward 顺序是：
 
@@ -480,7 +480,7 @@ Project Location 记录是未来受保护 Workflow 的路径授权材料。它�
 2. 在已完成的 CID Workspace <-> Resolve Project / DecisionFrame / CompletionReport spine 上扩展 CID-owned Codex-style Sidebar/Conversation + 四层 Artifact Workspace
 3. 所有 protected Agent action 继续先经过 exact Session/Turn `CID_DECISION_CONTEXT` + `decisionContextToken` freshness receipt，再进入唯一 ToolKernel / ResolveScheduler / ResolveBroker authority；receipt 不是 approval
 4. 落地 Context / Active Artifact / Changes·Plan / Evidence·Inspector + soft-follow/Pin/Reveal in Resolve
-5. 持续维护 `CAPABILITY_LEDGER.md` 的 breadth-first 能力全集，并落地 build qualification、implementation routing/composition
+5. 持续维护 `docs/development/CAPABILITY_LEDGER.md` 的 breadth-first 能力全集，并落地 build qualification、implementation routing/composition
 6. 资格化 Timeline Version Protection、Human-edit-wins stale/Rebase、ChangeSet/CompletionReport
 7. depth-first production packs：Project/Media/Edit -> Fusion/Color -> Fairlight/Deliver
 8. 具体 pack 需要时加入 content-addressed Analysis Artifacts/Jobs
@@ -488,7 +488,7 @@ Project Location 记录是未来受保护 Workflow 的路径授权材料。它�
 10. 仅为明确已资格化 gap 加 allowlisted UI Automation / Offline Adapter / trusted plugin pack
 ```
 
-不会为了追求 API 方法数量把完整能力全集暴露给模型；`CAPABILITY_LEDGER.md` breadth-first 记录已知能力/缺口，让它们都有明确归宿。生产能力通过完整 vertical Capability Pack 增生：stable semantic ID、实体/观察、primitive+workflow ActionDescriptor、versioned implementation、build qualification、Context/Capability Frontier、Artifact projection、Plan/ChangeSet、验证/恢复和 Agent task eval 一起进入系统。模型每次只看到当前 DecisionFrame 的 ActionOffers。
+不会为了追求 API 方法数量把完整能力全集暴露给模型；`docs/development/CAPABILITY_LEDGER.md` breadth-first 记录已知能力/缺口，让它们都有明确归宿。生产能力通过完整 vertical Capability Pack 增生：stable semantic ID、实体/观察、primitive+workflow ActionDescriptor、versioned implementation、build qualification、Context/Capability Frontier、Artifact projection、Plan/ChangeSet、验证/恢复和 Agent task eval 一起进入系统。模型每次只看到当前 DecisionFrame 的 ActionOffers。
 
 ## 11. 开发
 
@@ -542,17 +542,17 @@ npm run package:mac
 | 文档 | 权威范围 |
 | --- | --- |
 | `AGENTS.md` | 当前项目开发和 Resolve 安全规则 |
-| `AGENT_SYSTEM_SPEC.md` | Agent 人体工学、闭环链接抽象塔、DecisionFrame/Capability Frontier、World Model、ChangeSet/CompletionReport、Capability Pack、共享 cockpit 与评估体系 |
-| `PRODUCT_SPEC.md` | 产品目标、架构原则、研究结论 |
-| `UI_SPEC.md` | Codex-style Workspace/Session Sidebar / Conversation / 四层 Resolve Artifact Workspace、soft-follow/Pin、SharedFocus、审批/ChangeSet 展示 |
-| `WORKSPACE_SPEC.md` | Workspace/Resolve 绑定、四层 Artifact 模型、各 capability-domain lens、Analysis Store/Jobs 与 World Model 投影 |
-| `CAPABILITY_LEDGER.md` | breadth-first 已知能力全集、stable semantic capability ID、lifecycle/gap 状态与覆盖快照 |
-| `WORKFLOW_CATALOG.md` | Capability/ActionDescriptor/implementation contract、当前 executable workflow subset、Capability Pack/Workflow 设计 |
-| `EXECUTION_SECURITY_SPEC.md` | plan、approval、dispatch、ambiguous、verification、recovery 状态机 |
-| `IMPLEMENTATION_PLAN.md` | 初步实施路线、文件落点和验收门；顺序可按当前目标与证据调整 |
-| `ARCHITECTURE_PLAN.md` | 当前技术架构、System Spine 与历史实现背景 |
+| `docs/development/AGENT_SYSTEM_SPEC.md` | Agent 人体工学、闭环链接抽象塔、DecisionFrame/Capability Frontier、World Model、ChangeSet/CompletionReport、Capability Pack、共享 cockpit 与评估体系 |
+| `docs/development/PRODUCT_SPEC.md` | 产品目标、架构原则、研究结论 |
+| `docs/development/UI_SPEC.md` | Codex-style Workspace/Session Sidebar / Conversation / 四层 Resolve Artifact Workspace、soft-follow/Pin、SharedFocus、审批/ChangeSet 展示 |
+| `docs/development/WORKSPACE_SPEC.md` | Workspace/Resolve 绑定、四层 Artifact 模型、各 capability-domain lens、Analysis Store/Jobs 与 World Model 投影 |
+| `docs/development/CAPABILITY_LEDGER.md` | breadth-first 已知能力全集、stable semantic capability ID、lifecycle/gap 状态与覆盖快照 |
+| `docs/development/WORKFLOW_CATALOG.md` | Capability/ActionDescriptor/implementation contract、当前 executable workflow subset、Capability Pack/Workflow 设计 |
+| `docs/development/EXECUTION_SECURITY_SPEC.md` | plan、approval、dispatch、ambiguous、verification、recovery 状态机 |
+| `docs/development/IMPLEMENTATION_PLAN.md` | 初步实施路线、文件落点和验收门；顺序可按当前目标与证据调整 |
+| `docs/development/ARCHITECTURE_PLAN.md` | 当前技术架构、System Spine 与历史实现背景 |
 
-涉及系统整体 Agent 设计先看 `AGENT_SYSTEM_SPEC.md`；涉及能力是否存在/当前处于什么 lifecycle 状态时先看 `CAPABILITY_LEDGER.md`；涉及开发顺序时，将 `IMPLEMENTATION_PLAN.md` 作为路线参考，并以当前用户目标、真实源码状态和已资格化 Resolve 证据决定实际下一步。涉及右侧 DaVinci domain 的设计目标时参考 `WORKSPACE_SPEC.md`；涉及写操作安全语义时以 `EXECUTION_SECURITY_SPEC.md` 为准。
+涉及系统整体 Agent 设计先看 `docs/development/AGENT_SYSTEM_SPEC.md`；涉及能力是否存在/当前处于什么 lifecycle 状态时先看 `docs/development/CAPABILITY_LEDGER.md`；涉及开发顺序时，将 `docs/development/IMPLEMENTATION_PLAN.md` 作为路线参考，并以当前用户目标、真实源码状态和已资格化 Resolve 证据决定实际下一步。涉及右侧 DaVinci domain 的设计目标时参考 `docs/development/WORKSPACE_SPEC.md`；涉及写操作安全语义时以 `docs/development/EXECUTION_SECURITY_SPEC.md` 为准。
 
 ## 14. 参考项目
 
@@ -582,7 +582,7 @@ https://github.com/samuelgursky/davinci-resolve-mcp
 - source-safe media analysis；
 - offline computation 和 live apply 的边界。
 
-当前规划调研记录的最新快照见 `PRODUCT_SPEC.md` 和 `WORKSPACE_SPEC.md`。
+当前规划调研记录的最新快照见 `docs/development/PRODUCT_SPEC.md` 和 `docs/development/WORKSPACE_SPEC.md`。
 
 `samuelgursky/davinci-resolve-mcp` 是第三方 MIT 项目，不是 Blackmagic 官方 MCP。目标是将其有价值的 Resolve API/domain kernel/readback/page-lock/versioning/capability implementation 接入 CID authority 下方；它不能拥有第二个 live Resolve session，也不能绕过 CID approval/verification。
 

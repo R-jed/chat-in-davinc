@@ -5,7 +5,7 @@ This project is a local Agent workbench for DaVinci Resolve. The target product 
 ## Product direction
 
 - Target domains are Project, Media, Edit, Fusion, Color, Fairlight and Deliver.
-- Maintain `CAPABILITY_LEDGER.md` as the no-silent-gap breadth-first inventory across Project, Media, Edit, Fusion, Color, Fairlight and Deliver. API-reachable, local-analysis, offline-adapter, allowlisted UI-Automation and trusted-plugin candidates all get explicit lifecycle status; only fully contracted/qualified capabilities become production Agent actions.
+- Maintain `docs/development/CAPABILITY_LEDGER.md` as the no-silent-gap breadth-first inventory across Project, Media, Edit, Fusion, Color, Fairlight and Deliver. API-reachable, local-analysis, offline-adapter, allowlisted UI-Automation and trusted-plugin candidates all get explicit lifecycle status; only fully contracted/qualified capabilities become production Agent actions.
 - COS is the upper runtime foundation for ChatGPT Web, Conversation/Session, durable turn/input, Goal/Loop/Finish, Compact & Resume, continuation, Prime/Worker, inbox and model/Agent orchestration. CID owns the final Codex-style Sidebar/Conversation renderer projection; never confuse COS runtime ownership with final visual ownership or recreate a parallel CID lifecycle.
 - CID owns the DaVinci boundary below COS: its Tunnel, MCP Gateway, Context Compiler, Resolve World Model, Action Catalog/ToolKernel, capability qualification, plan/approval/verification/evidence stack, ResolveScheduler and ResolveBroker.
 - `samuelgursky/davinci-resolve-mcp` is a third-party MIT implementation source built on Blackmagic's official Scripting API. Integrate its useful Project/Media/Edit/Fusion/Color/Fairlight/Deliver capability/kernel implementation underneath the CID authority boundary; do not let it become a second persistent Resolve authority or expose its granular inventory wholesale to the normal Agent.
@@ -13,7 +13,7 @@ This project is a local Agent workbench for DaVinci Resolve. The target product 
 
 ## Agent-native system invariants
 
-- `AGENT_SYSTEM_SPEC.md` is the canonical system-level design for Agent ergonomics, context architecture, the Resolve World Model, linked semantic references, capability growth and the shared human/Agent cockpit.
+- `docs/development/AGENT_SYSTEM_SPEC.md` is the canonical system-level design for Agent ergonomics, context architecture, the Resolve World Model, linked semantic references, capability growth and the shared human/Agent cockpit.
 - Treat Chat in DaVinci as one synthetic closed control system, not a set of pages/tools/services: `GoalFrame/TaskGraph -> SituationFrame/SharedFocus -> DecisionFrame -> Capability Frontier/ActionOffer -> Plan/ChangeSet -> Evidence/SemanticDelta -> World Model/CompletionReport -> next decision`, with ToolKernel/Scheduler/Resolve authority as the single execution lane beneath it.
 - Keep deterministic machine state local. Exact IDs, full cached observations, raw evidence, credentials, approval state and scheduler state must not be copied into model context merely because they exist.
 - Model-visible context is compiled per decision. Prefer the exact goal criterion, current `SituationFrame` including SharedFocus/completion gap, recent semantic deltas and state-bound `ActionOffer`s over replaying full transcripts, full project snapshots or the whole Action Catalog. Data that cannot change the next decision stays local.

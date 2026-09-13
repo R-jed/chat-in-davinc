@@ -2,7 +2,7 @@
 
 This project uses the interface-detail checklist from https://github.com/raunofreiberg/interfaces as an input, not as a web-framework mandate. The product is a macOS Electron application, so rules are classified before they are enforced.
 
-This policy guards the exact current renderer implementation. The forward information architecture is the Agent-native three-pane shared cockpit in `AGENT_SYSTEM_SPEC.md` / `UI_SPEC.md`: CID-owned Codex-style Workspace/Session Sidebar + Conversation backed by COS runtime, plus the four-layer Resolve Artifact Workspace (Context / Active Artifact / Changes·Plan / Evidence·Inspector). Migrating from the current Topbar/peer-page baseline does not authorize weakening these accessibility, interaction or regression rules, and current design exceptions remain pinned until the underlying source is deliberately changed and the exception evidence is reviewed.
+This policy guards the exact current renderer implementation. The forward information architecture is the Agent-native three-pane shared cockpit in `docs/development/AGENT_SYSTEM_SPEC.md` / `docs/development/UI_SPEC.md`: CID-owned Codex-style Workspace/Session Sidebar + Conversation backed by COS runtime, plus the four-layer Resolve Artifact Workspace (Context / Active Artifact / Changes·Plan / Evidence·Inspector). Migrating from the current Topbar/peer-page baseline does not authorize weakening these accessibility, interaction or regression rules, and current design exceptions remain pinned until the underlying source is deliberately changed and the exception evidence is reviewed.
 
 ## Required
 
