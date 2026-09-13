@@ -1,0 +1,8 @@
+{
+  "extensionName": {
+    "message": "Chat in DaVinci 配套扩展"
+  },
+  "extensionDescription": {
+    "message": "将你的 ChatGPT 会话记录到本地 Chat in DaVinci 应用，并按 MCP 工具调用实际完成的操作进行标注。"
+  }
+}

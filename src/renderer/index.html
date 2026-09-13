@@ -1,0 +1,642 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Chat in DaVinci</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <svg class="sprite" aria-hidden="true">
+      <defs>
+        <g id="i-check"><path d="M5 12.5 10 17.5 19 7" /></g>
+        <g id="i-folder"><path d="M3 7a1 1 0 0 1 1-1h5l2 2h8a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1Z" /></g>
+        <g id="i-out"><path d="M13 5h6v6" /><path d="M19 5 11 13" /><path d="M18 14.5V19H5V6h4.5" /></g>
+        <g id="i-copy"><rect x="8.5" y="8.5" width="11" height="11" rx="2" /><path d="M15.5 5.5h-11v11" /></g>
+        <g id="i-trash"><path d="M4.5 7h15M9.5 7V4.5h5V7M6.5 7l1 12.5h9L17.5 7" /></g>
+        <g id="i-pulse"><path d="M3 12h4l3 8 4-16 3 8h4" /></g>
+        <g id="i-chev"><path d="M9.5 5.5 16 12l-6.5 6.5" /></g>
+        <g id="i-steps"><path d="M8 6h12M8 12h12M8 18h12M4 6h.01M4 12h.01M4 18h.01" /></g>
+        <g id="i-settings"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.09a2 2 0 0 1 1 1.73v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.38a2 2 0 0 0-.73-2.73l-.15-.09a2 2 0 0 1-1-1.74v-.51a2 2 0 0 1 1-1.73l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2Z" /><circle cx="12" cy="12" r="3" /></g>
+        <g id="i-language"><circle cx="12" cy="12" r="8.5" /><path d="M3.8 12h16.4M12 3.5c2.2 2.3 3.4 5.1 3.4 8.5S14.2 18.2 12 20.5M12 3.5C9.8 5.8 8.6 8.6 8.6 12s1.2 6.2 3.4 8.5" /></g>
+        <g id="i-mark"><circle cx="8" cy="12" r="3.5" /><circle cx="16" cy="12" r="3.5" /><path d="M11.5 12h1" /></g>
+      </defs>
+    </svg>
+
+    <div class="app" id="app" data-navigation-layout="sidebar" data-sidebar-collapsed="false" data-sidebar-peek="false">
+      <button class="sidebar-collapse-button" id="sidebarCollapseButton" type="button" aria-controls="tabs" aria-expanded="true" aria-label="Collapse sidebar" hidden></button>
+      <header class="topbar-shell">
+        <div class="topbar">
+          <nav class="workspace-tabs" id="tabs" aria-label="Conversations" data-i18n-aria-label="agent.sessions">
+            <button class="sidebar-new-chat" id="sidebarNewChat" type="button" data-i18n="agent.newChat">New chat</button>
+            <div class="sidebar-section-label" data-i18n="agent.sessions">Conversations</div>
+            <div class="sidebar-session-list" id="agentSessionList"></div>
+            <button class="sidebar-activity-button" data-tab="activity" type="button" aria-label="Activity" data-i18n-aria-label="nav.activity" data-i18n="nav.activity">Activity</button>
+            <span class="workspace-tab-indicator" aria-hidden="true"></span>
+          </nav>
+          <div class="topbar-utilities">
+            <button id="headline" class="connection-signal is-idle" data-tab="setup" type="button" aria-live="polite" aria-label="Checking…" title="Checking…">
+              <span class="connection-signal-label" data-i18n="status.checking">Checking…</span>
+              <span class="signal-bars" aria-hidden="true">
+                <span class="signal-bar"></span>
+                <span class="signal-bar"></span>
+                <span class="signal-bar"></span>
+                <span class="signal-bar"></span>
+              </span>
+            </button>
+            <button class="utility-button" data-tab="settings" type="button" aria-label="Settings" title="Settings" data-i18n-aria-label="nav.settings" data-i18n-title="nav.settings">
+              <svg class="ico settings-icon" viewBox="0 0 24 24"><use href="#i-settings" /></svg>
+              <span class="sidebar-utility-label" data-i18n="nav.settings">Settings</span>
+            </button>
+          </div>
+        </div>
+        <div class="sidebar-resize-handle" id="sidebarResizeHandle" role="separator" aria-orientation="vertical" aria-label="Resize sidebar" data-i18n-aria-label="nav.resizeSidebar"></div>
+      </header>
+      <div class="sidebar-peek-zone" id="sidebarPeekZone" aria-hidden="true"></div>
+
+      <main>
+        <div class="cockpit-shell is-active" id="cockpitShell" data-davinci-collapsed="false">
+        <button class="davinci-collapse-button" id="davinciCollapseButton" type="button" aria-controls="davinciWorkspace" aria-expanded="true" aria-label="Collapse DaVinci workspace" data-i18n-aria-label="davinci.collapseWorkspace"></button>
+        <section class="agent-chat-panel" id="conversationPane">
+          <div class="agent-chat-shell">
+            <div class="workspace-heading-row agent-chat-heading">
+              <div class="settings-heading">
+                <h1 id="agentConversationTitle" data-i18n="agent.title">Chat</h1>
+                <p data-i18n="agent.subtitle">Talk to the built-in DaVinci Agent. Resolve actions use only the protected ToolKernel.</p>
+              </div>
+            </div>
+            <p class="agent-model-line" id="agentModelLine"></p>
+            <div class="agent-focus-bar" id="agentFocusBar" hidden>
+              <span data-i18n="agent.context">Context</span>
+              <button class="agent-focus-link" id="agentFocusLink" type="button" data-i18n="agent.currentContext">Current context</button>
+            </div>
+            <div class="agent-evidence-bar" id="agentEvidenceBar" hidden>
+              <span data-i18n="agent.evidence">Evidence</span>
+              <div class="agent-evidence-links" id="agentEvidenceLinks"></div>
+            </div>
+            <div class="agent-spine-bar" id="agentSpineBar" hidden>
+              <span class="agent-spine-label" data-i18n="agent.spine">System spine</span>
+              <span id="agentSpineWorkspace"></span>
+              <span id="agentSpineDecision"></span>
+              <span id="agentSpineActions"></span>
+              <span id="agentSpineCompletion"></span>
+            </div>
+            <div class="agent-transcript" id="agentTranscript" aria-live="polite">
+              <div class="agent-empty" id="agentEmpty">
+                <h2 data-i18n="agent.emptyTitle">Start a DaVinci conversation</h2>
+                <p data-i18n="agent.emptyBody">Ask about the current project, timeline, media, edit, Fusion, Color, Fairlight or Deliver state. The Agent can only use protected tools exposed by this app.</p>
+              </div>
+            </div>
+            <p class="agent-history-note" id="agentHistoryNote" hidden data-i18n="agent.historyTruncated">Showing the most recent 500 local session events.</p>
+            <div class="agent-composer">
+              <textarea id="agentComposer" rows="3" maxlength="32000" data-i18n-placeholder="agent.composerPlaceholder" placeholder="Ask Chat in DaVinci…"></textarea>
+              <button class="btn btn-primary" id="agentSend" type="button" data-i18n="agent.send">Send</button>
+            </div>
+          </div>
+        </section>
+
+        <div class="cockpit-resize-handle" id="cockpitResizeHandle" role="separator" aria-orientation="vertical" aria-label="Resize DaVinci workspace" data-i18n-aria-label="davinci.resizeWorkspace"></div>
+
+        <section class="davinci-workspace" id="davinciWorkspace">
+          <div class="artifact-workspace-scroll">
+            <section class="artifact-layer artifact-context-layer" id="artifactContextLayer">
+              <div class="artifact-layer-heading">
+                <div><span class="artifact-layer-index">1</span><h2 data-i18n="artifact.contextTitle">Context</h2></div>
+                <span class="pill" id="artifactWorkspaceFreshness"></span>
+              </div>
+              <div class="artifact-context-grid">
+                <div><span data-i18n="artifact.workspace">Workspace</span><strong id="artifactContextWorkspace">—</strong></div>
+                <div><span data-i18n="artifact.project">Project</span><strong id="artifactContextProject">—</strong></div>
+                <div><span data-i18n="artifact.resolve">Resolve</span><strong id="artifactContextResolve">—</strong></div>
+                <div><span data-i18n="artifact.session">Session</span><strong id="artifactContextSession">—</strong></div>
+                <div><span data-i18n="artifact.turn">Active Turn</span><strong id="artifactContextTurn">—</strong></div>
+                <div><span data-i18n="artifact.goal">Goal criterion</span><strong id="artifactContextGoal">—</strong></div>
+                <div><span data-i18n="artifact.obligation">Current obligation</span><strong id="artifactContextObligation">—</strong></div>
+                <div><span data-i18n="artifact.focus">SharedFocus</span><strong id="artifactContextFocus">—</strong></div>
+                <div><span data-i18n="artifact.decision">Decision</span><strong id="artifactContextDecision">—</strong></div>
+              </div>
+              <p class="artifact-context-note" id="artifactContextGap"></p>
+              <p class="artifact-context-note artifact-context-blockers" id="artifactContextBlockers"></p>
+            </section>
+
+            <section class="artifact-layer artifact-active-layer" id="artifactActiveLayer">
+              <div class="artifact-layer-heading artifact-active-heading">
+                <div><span class="artifact-layer-index">2</span><h2 data-i18n="artifact.activeTitle">Active Artifact</h2></div>
+                <div class="artifact-active-actions">
+                  <button class="btn" id="artifactPin" type="button" aria-pressed="false" data-i18n="artifact.pin">Pin</button>
+                  <button class="btn" id="artifactUseContext" type="button" data-i18n="artifact.useContext">Use as context</button>
+                  <button class="btn" id="artifactReveal" type="button" disabled data-i18n="artifact.revealUnavailable">Reveal unavailable</button>
+                </div>
+              </div>
+              <label class="artifact-selector-label" for="artifactSelect" data-i18n="artifact.selectLabel">Artifact</label>
+              <select id="artifactSelect" class="artifact-selector"></select>
+              <p class="artifact-agent-working" id="artifactAgentWorking" hidden></p>
+              <div class="artifact-summary-strip" id="artifactSummaryStrip"></div>
+              <nav class="davinci-tabs artifact-lenses" id="davinciTabs" aria-label="Artifact lenses" data-i18n-aria-label="artifact.lenses">
+                <button class="is-sel" data-artifact-lens="summary" type="button" aria-current="page" data-i18n="artifact.lens.summary">Summary</button>
+                <button data-artifact-lens="project" type="button" data-i18n="nav.project">Project</button>
+                <button data-artifact-lens="media" type="button" data-i18n="nav.media">Media</button>
+                <button data-artifact-lens="edit" type="button" data-i18n="nav.edit">Edit</button>
+                <button data-artifact-lens="fusion" type="button" data-i18n="nav.fusion">Fusion</button>
+                <button data-artifact-lens="color" type="button" data-i18n="nav.color">Color</button>
+                <button data-artifact-lens="fairlight" type="button" data-i18n="nav.fairlight">Fairlight</button>
+                <button data-artifact-lens="deliver" type="button" data-i18n="nav.deliver">Deliver</button>
+              </nav>
+              <div class="davinci-domain-stage">
+                <section class="davinci-domain-panel artifact-summary-panel is-active" data-artifact-lens-panel="summary">
+                  <div class="workspace-sheet artifact-summary-sheet">
+                    <div class="facts compact artifact-summary-facts" id="artifactSummaryFacts"></div>
+                    <section class="workflow-card artifact-offers-card">
+                      <div class="workflow-card-head"><div><h2 data-i18n="artifact.offersTitle">Relevant actions</h2><p data-i18n="artifact.offersBody">Current DecisionFrame ActionOffers for this Artifact.</p></div></div>
+                      <div class="artifact-offer-list" id="artifactActionOffers"></div>
+                    </section>
+                  </div>
+                </section>
+        <section class="davinci-domain-panel project-panel" data-artifact-lens-panel="project">
+          <div class="workspace-sheet">
+            <div class="workspace-heading-row">
+              <div class="settings-heading">
+                <h1 data-i18n="project.title">Project</h1>
+                <p data-i18n="project.subtitle">Current Resolve project, timeline and protected readiness.</p>
+              </div>
+              <button class="btn" type="button" data-refresh-workflow data-i18n="workflow.refresh">Refresh</button>
+            </div>
+            <section class="workflow-card project-hero-card">
+              <div class="workflow-card-head">
+                <div><h2 data-i18n="workflow.preflight">Project preflight</h2><p data-i18n="workflow.preflightBody">Reads the current project and timeline identity through a fixed app-owned read-only template. No model-supplied script is executed.</p></div>
+                <span class="pill" id="workflowPreflightState" data-i18n="workflow.pending">Not enabled</span>
+              </div>
+              <div class="facts compact workflow-preflight-facts" id="workflowPreflightFacts"></div>
+            </section>
+            <section class="workflow-card project-settings-card">
+              <div class="workflow-card-head">
+                <div><h2 data-i18n="project.settingsTitle">Project settings</h2><p data-i18n="project.settingsBody">Current effective timeline and project settings read through the protected getter-only reader.</p></div>
+              </div>
+              <div class="facts compact workflow-preflight-facts" id="projectSettingsFacts"></div>
+            </section>
+            <section class="workflow-card project-readiness-card">
+              <div class="workflow-card-head"><div><h2 data-i18n="project.readinessTitle">Readiness details</h2><p data-i18n="project.readinessBody">Compact results from the protected V1 readers used by Project preflight.</p></div></div>
+              <div class="domain-list" id="projectPreflightChecks"></div>
+              <p class="media-inventory-note" id="projectPreflightNote"></p>
+            </section>
+          </div>
+        </section>
+
+        <section class="davinci-domain-panel" data-artifact-lens-panel="media">
+          <div class="workspace-sheet">
+            <div class="workspace-heading-row">
+              <div class="settings-heading"><h1 data-i18n="media.title">Media</h1><p data-i18n="media.subtitle">Media Pool inventory, source state and ingest readiness.</p></div>
+              <button class="btn" type="button" data-refresh-media data-i18n="workflow.refresh">Refresh</button>
+            </div>
+            <section class="workflow-card media-summary-card">
+              <div class="workflow-card-head">
+                <div><h2 data-i18n="media.inventoryTitle">Media inventory</h2><p data-i18n="media.inventoryBody">Bounded read-only inventory from the current Media Pool. Source paths are not returned.</p></div>
+                <span class="pill" id="mediaInventoryState" data-i18n="workflow.pending">Not enabled</span>
+              </div>
+              <div class="facts compact workflow-preflight-facts" id="mediaInventoryFacts"></div>
+            </section>
+            <section class="workflow-card media-items-card">
+              <div class="workflow-card-head">
+                <div><h2 data-i18n="media.itemsTitle">Observed items</h2><p data-i18n="media.itemsBody">A bounded item sample for production review. Full paths and proxy paths stay out of this summary.</p></div>
+              </div>
+              <div class="media-inventory-list" id="mediaInventoryList"></div>
+              <p class="media-inventory-note" id="mediaInventoryNote"></p>
+            </section>
+            <section class="workflow-card media-clip-card">
+              <div class="workflow-card-head">
+                <div><h2 data-i18n="media.clipTitle">Clip details</h2><p data-i18n="media.clipBody">Select a source clip above to inspect properties, metadata, markers and proxy state without returning source paths.</p></div>
+                <span class="pill" id="mediaClipState" data-i18n="media.clipSelect">Select a source clip</span>
+              </div>
+              <div class="facts compact workflow-preflight-facts" id="mediaClipFacts"></div>
+              <div class="domain-list" id="mediaClipEvidence"></div>
+              <p class="media-inventory-note" id="mediaClipNote"></p>
+            </section>
+            <section class="workflow-card media-link-card">
+              <div class="workflow-card-head">
+                <div><h2 data-i18n="media.linkTitle">Link capabilities</h2><p data-i18n="media.linkBody">Read-only method-surface evidence for relink, unlink, proxy and full-resolution operations. No link operation is called.</p></div>
+                <span class="pill" id="mediaLinkState" data-i18n="workflow.pending">Not enabled</span>
+              </div>
+              <div class="facts compact workflow-preflight-facts" id="mediaLinkFacts"></div>
+              <p class="media-inventory-note" id="mediaLinkNote"></p>
+            </section>
+          </div>
+        </section>
+
+        <section class="davinci-domain-panel" data-artifact-lens-panel="edit">
+          <div class="workspace-sheet">
+            <div class="workspace-heading-row">
+              <div class="settings-heading"><h1 data-i18n="edit.title">Edit</h1><p data-i18n="edit.subtitle">Timeline structure, editorial QC and review state.</p></div>
+              <button class="btn" type="button" data-refresh-edit data-i18n="workflow.refresh">Refresh</button>
+            </div>
+            <section class="workflow-card edit-summary-card">
+              <div class="workflow-card-head">
+                <div><h2 data-i18n="edit.summaryTitle">Timeline summary</h2><p data-i18n="edit.summaryBody">Bounded structural readback from the current timeline. No timeline mutation is performed.</p></div>
+                <span class="pill" id="editTimelineState" data-i18n="workflow.pending">Not enabled</span>
+              </div>
+              <div class="facts compact workflow-preflight-facts" id="editTimelineFacts"></div>
+            </section>
+            <section class="workflow-card edit-tracks-card">
+              <div class="workflow-card-head">
+                <div><h2 data-i18n="edit.tracksTitle">Track structure</h2><p data-i18n="edit.tracksBody">Track names, states and item counts from the current timeline.</p></div>
+              </div>
+              <div class="edit-track-list" id="editTrackList"></div>
+              <p class="media-inventory-note" id="editTrackNote"></p>
+            </section>
+            <section class="workflow-card edit-items-card">
+              <div class="workflow-card-head">
+                <div><h2 data-i18n="edit.itemsTitle">Timeline item structure</h2><p data-i18n="edit.itemsBody">Exact item IDs and raw record/source range getters. Range boundary semantics are not inferred.</p></div>
+                <span class="pill" id="editStructureState" data-i18n="workflow.pending">Not enabled</span>
+              </div>
+              <div class="domain-list" id="editItemList"></div>
+              <p class="media-inventory-note" id="editItemNote"></p>
+            </section>
+            <section class="workflow-card edit-gaps-card">
+              <div class="workflow-card-head">
+                <div><h2 data-i18n="edit.gapsTitle">Same-track range relationships</h2><p data-i18n="edit.gapsBody">Objective record-boundary comparisons only. Unresolved range-boundary semantics are kept explicit.</p></div>
+                <span class="pill" id="editGapsState" data-i18n="workflow.pending">Not enabled</span>
+              </div>
+              <div class="facts compact workflow-preflight-facts" id="editGapFacts"></div>
+              <div class="domain-list" id="editGapList"></div>
+              <p class="media-inventory-note" id="editGapNote"></p>
+            </section>
+            <section class="workflow-card edit-source-ranges-card">
+              <div class="workflow-card-head">
+                <div><h2 data-i18n="edit.sourceRangesTitle">Source / record getter report</h2><p data-i18n="edit.sourceRangesBody">Raw TimelineItem getter values and exact identities only. Source coordinate semantics and conform matches are not inferred.</p></div>
+                <span class="pill" id="editSourceRangesState" data-i18n="workflow.pending">Not enabled</span>
+              </div>
+              <div class="facts compact workflow-preflight-facts" id="editSourceRangeFacts"></div>
+              <div class="domain-list" id="editSourceRangeList"></div>
+              <p class="media-inventory-note" id="editSourceRangeNote"></p>
+            </section>
+            <section class="workflow-card edit-transitions-card">
+              <div class="workflow-card-head">
+                <div><h2 data-i18n="edit.transitionsTitle">Transition / fade evidence</h2><p data-i18n="edit.transitionsBody">Raw GetFades readback plus fixed AddTransition/SetFades method-surface evidence. No transition writer is exposed.</p></div>
+                <span class="pill" id="editTransitionsState" data-i18n="workflow.pending">Not enabled</span>
+              </div>
+              <div class="facts compact workflow-preflight-facts" id="editTransitionFacts"></div>
+              <div class="domain-list" id="editTransitionList"></div>
+              <p class="media-inventory-note" id="editTransitionNote"></p>
+            </section>
+          </div>
+        </section>
+
+        <section class="davinci-domain-panel" data-artifact-lens-panel="fusion">
+          <div class="workspace-sheet">
+            <div class="workspace-heading-row"><div class="settings-heading"><h1>Fusion</h1><p data-i18n="fusion.subtitle">Composition inspection.</p></div><button class="btn" type="button" data-refresh-fusion data-i18n="workflow.refresh">Refresh</button></div>
+            <section class="workflow-card domain-summary-card"><div class="workflow-card-head"><div><h2 data-i18n="fusion.summaryTitle">Composition summary</h2><p data-i18n="fusion.summaryBody">Bounded composition identity and name readback from the current timeline video item.</p></div><span class="pill" id="fusionCompositionState"></span></div><div class="facts compact workflow-preflight-facts" id="fusionCompositionFacts"></div></section>
+            <section class="workflow-card domain-detail-card"><div class="workflow-card-head"><div><h2 data-i18n="fusion.compositionsTitle">Observed compositions</h2><p data-i18n="fusion.compositionsBody">Only composition names returned by the qualified bounded reader are shown.</p></div></div><div class="domain-list" id="fusionCompositionList"></div><p class="media-inventory-note" id="fusionCompositionNote"></p></section>
+            <section class="workflow-card domain-detail-card"><div class="workflow-card-head"><div><h2 data-i18n="fusion.graphTitle">Graph readback</h2><p data-i18n="fusion.graphBody">Bounded tool, port-count and connection readback from observed Fusion compositions.</p></div><span class="pill" id="fusionGraphState"></span></div><div class="facts compact workflow-preflight-facts" id="fusionGraphFacts"></div><div class="domain-list" id="fusionGraphList"></div><p class="media-inventory-note" id="fusionGraphNote"></p></section>
+          </div>
+        </section>
+
+        <section class="davinci-domain-panel" data-artifact-lens-panel="color">
+          <div class="workspace-sheet">
+            <div class="workspace-heading-row"><div class="settings-heading"><h1 data-i18n="color.title">Color</h1><p data-i18n="color.subtitle">Color pipeline, grade structure and technical evidence.</p></div><button class="btn" type="button" data-refresh-color data-i18n="workflow.refresh">Refresh</button></div>
+            <section class="workflow-card domain-summary-card"><div class="workflow-card-head"><div><h2 data-i18n="color.pipelineTitle">Color pipeline</h2><p data-i18n="color.pipelineBody">Project/timeline color management and bounded grade structure readback.</p></div><span class="pill" id="colorPipelineState"></span></div><div class="facts compact workflow-preflight-facts" id="colorPipelineFacts"></div></section>
+            <section class="workflow-card domain-detail-card"><div class="workflow-card-head"><div><h2 data-i18n="color.itemsTitle">Observed grade structure</h2><p data-i18n="color.itemsBody">Bounded current-timeline item, group, version, node and LUT evidence.</p></div></div><div class="domain-list" id="colorItemList"></div><p class="media-inventory-note" id="colorItemNote"></p></section>
+            <section class="workflow-card domain-detail-card"><div class="workflow-card-head"><div><h2 data-i18n="color.graphTitle">Node graph readback</h2><p data-i18n="color.graphBody">Bounded timeline/default clip node identity, LUT-presence, cache and OFX-tool readback.</p></div><span class="pill" id="colorGraphState"></span></div><div class="facts compact workflow-preflight-facts" id="colorGraphFacts"></div><div class="domain-list" id="colorGraphList"></div><p class="media-inventory-note" id="colorGraphNote"></p></section>
+            <section class="workflow-card domain-detail-card"><div class="workflow-card-head"><div><h2 data-i18n="color.versionsTitle">Grade versions</h2><p data-i18n="color.versionsBody">Bounded current-version and local/remote version-name readback from current-timeline video items.</p></div><span class="pill" id="colorVersionsState"></span></div><div class="facts compact workflow-preflight-facts" id="colorVersionsFacts"></div><div class="domain-list" id="colorVersionsList"></div><p class="media-inventory-note" id="colorVersionsNote"></p></section>
+          </div>
+        </section>
+
+        <section class="davinci-domain-panel" data-artifact-lens-panel="fairlight">
+          <div class="workspace-sheet">
+            <div class="workspace-heading-row"><div class="settings-heading"><h1>Fairlight</h1><p data-i18n="fairlight.subtitle">Audio tracks, mappings and technical readiness.</p></div><button class="btn" type="button" data-refresh-fairlight data-i18n="workflow.refresh">Refresh</button></div>
+            <section class="workflow-card domain-summary-card"><div class="workflow-card-head"><div><h2 data-i18n="fairlight.mappingTitle">Audio mapping</h2><p data-i18n="fairlight.mappingBody">Audio track layout, source-channel mapping and Voice Isolation state.</p></div><span class="pill" id="fairlightMappingState"></span></div><div class="facts compact workflow-preflight-facts" id="fairlightMappingFacts"></div></section>
+            <section class="workflow-card domain-detail-card"><div class="workflow-card-head"><div><h2 data-i18n="fairlight.tracksTitle">Audio tracks</h2><p data-i18n="fairlight.tracksBody">Bounded track state and mapping evidence from the current timeline.</p></div></div><div class="domain-list" id="fairlightTrackList"></div><p class="media-inventory-note" id="fairlightTrackNote"></p></section>
+            <section class="workflow-card domain-detail-card"><div class="workflow-card-head"><div><h2 data-i18n="fairlight.processingTitle">Audio clip processing</h2><p data-i18n="fairlight.processingBody">Bounded current TimelineItem audio-processing property readback.</p></div><span class="pill" id="fairlightProcessingState"></span></div><div class="facts compact workflow-preflight-facts" id="fairlightProcessingFacts"></div><div class="domain-list" id="fairlightProcessingList"></div><p class="media-inventory-note" id="fairlightProcessingNote"></p></section>
+          </div>
+        </section>
+
+        <section class="davinci-domain-panel" data-artifact-lens-panel="deliver">
+          <div class="workspace-sheet">
+            <div class="workspace-heading-row"><div class="settings-heading"><h1 data-i18n="deliver.title">Deliver</h1><p data-i18n="deliver.subtitle">Render capability, settings and delivery readiness.</p></div><button class="btn" type="button" data-refresh-deliver data-i18n="workflow.refresh">Refresh</button></div>
+            <section class="workflow-card domain-summary-card"><div class="workflow-card-head"><div><h2 data-i18n="deliver.capabilitiesTitle">Render capabilities</h2><p data-i18n="deliver.capabilitiesBody">Live bounded format, codec and resolution capability summary from this Resolve build.</p></div><span class="pill" id="deliverCapabilityState"></span></div><div class="facts compact workflow-preflight-facts" id="deliverCapabilityFacts"></div><div class="domain-list" id="deliverFormatList"></div><p class="media-inventory-note" id="deliverPresetNote"></p></section>
+            <section class="workflow-card domain-detail-card"><div class="workflow-card-head"><div><h2 data-i18n="deliver.settingsTitle">Render settings evidence</h2><p data-i18n="deliver.settingsBody">Only settings the official getter API can prove; unavailable current settings remain unverified.</p></div><span class="pill" id="deliverSettingsState"></span></div><div class="facts compact workflow-preflight-facts" id="deliverSettingsFacts"></div><div class="domain-list" id="deliverJobList"></div><p class="media-inventory-note" id="deliverJobNote"></p></section>
+          </div>
+        </section>
+              </div>
+            </section>
+
+            <section class="artifact-layer artifact-plan-layer" id="artifactPlanLayer">
+              <div class="artifact-layer-heading">
+                <div><span class="artifact-layer-index">3</span><h2 data-i18n="artifact.planTitle">Changes / Plan</h2></div>
+                <button class="btn" id="artifactOpenActivity" type="button" data-i18n="artifact.openActivity">Open Activity</button>
+              </div>
+              <p class="artifact-empty-note" id="artifactPlanEmpty" data-i18n="artifact.noChanges">No pending changes</p>
+              <div class="artifact-plan-list" id="artifactPlanList"></div>
+            </section>
+
+            <section class="artifact-layer artifact-evidence-layer" id="artifactEvidenceLayer">
+              <div class="artifact-layer-heading">
+                <div><span class="artifact-layer-index">4</span><h2 data-i18n="artifact.evidenceTitle">Evidence / Inspector</h2></div>
+              </div>
+              <div class="artifact-evidence-list" id="artifactEvidenceList"></div>
+              <div class="artifact-delta-list" id="artifactDeltaList"></div>
+              <p class="artifact-context-note" id="artifactUnknowns"></p>
+              <p class="artifact-context-note" id="artifactLimitations"></p>
+            </section>
+          </div>
+        </section>
+        </div>
+
+        <section class="panel activity-panel" data-panel="activity">
+          <div class="activity-card">
+            <div class="activity-heading">
+              <div class="settings-heading">
+                <h1 data-i18n="activity.title">Activity</h1>
+                <p data-i18n="activity.subtitle">Recent local connection and diagnostic events. Credentials are redacted.</p>
+              </div>
+              <div class="activity-actions">
+                <span id="activityProblems" class="activity-problems"></span>
+                <button class="btn" id="copyActivity" type="button" data-i18n="activity.copyText">Copy activity</button>
+                <button class="btn" id="copyDiagnostics" type="button" data-i18n="activity.copyJson">Copy diagnostics JSON</button>
+              </div>
+            </div>
+            <section class="workflow-card activity-plan-card">
+              <div class="workflow-card-head">
+                <div><h2 data-i18n="activity.plansTitle">Protected plans</h2><p data-i18n="activity.plansBody">Review locally created mutation plans. Approval is durable but never executes the plan by itself.</p></div>
+                <button class="btn" id="refreshWorkflowPlans" type="button" data-i18n="workflow.refresh">Refresh</button>
+              </div>
+              <div class="workflow-plan-list" id="workflowPlanList"></div>
+            </section>
+            <section class="workflow-card activity-audit-card">
+              <div class="workflow-card-head"><div><h2 data-i18n="workflow.audit">Recent audit</h2><p data-i18n="workflow.auditBody">Recent protected tool executions. Arguments and Resolve results are not stored.</p></div></div>
+              <div class="workflow-audit-list" id="workflowAuditList"></div>
+            </section>
+            <section class="workflow-card activity-trace-card">
+              <div class="workflow-card-head"><div><h2 data-i18n="activity.tracesTitle">Agent run traces</h2><p data-i18n="activity.tracesBody">Durable per-turn execution summaries for the current conversation.</p></div></div>
+              <div class="agent-trace-list" id="agentTraceList"></div>
+            </section>
+            <p class="activity-privacy" data-i18n="activity.privacy">Recent activity only. Credentials are never recorded.</p>
+            <pre id="log"></pre>
+          </div>
+        </section>
+
+        <section class="panel setup-panel" data-panel="setup">
+          <div class="sheet">
+          <div class="workspace-heading-row settings-title-row">
+            <div class="settings-heading"><h1 data-i18n="setup.title">Settings</h1><p data-i18n="setup.subtitle">Connect DaVinci Resolve to ChatGPT.</p></div>
+          </div>
+
+          <div class="lede">
+            <p data-i18n="setup.intro">Complete these six steps once. Everything required for first-time setup is handled on this page.</p>
+            <button class="btn" id="wizExpand" type="button" data-i18n="setup.showAll">Show all steps</button>
+          </div>
+
+          <section class="health-card">
+            <div class="health-heading">
+              <div><h2 data-i18n="health.title">Connection status</h2><p data-i18n="health.subtitle">Each link is checked separately.</p></div>
+            </div>
+            <div class="health-checks" id="healthChecks"></div>
+          </section>
+
+          <ol class="wizard" id="wizard">
+            <li class="step" data-step="resolve">
+              <div class="step-mark"><svg class="ico tick" viewBox="0 0 24 24"><use href="#i-check" /></svg></div>
+              <div class="step-body">
+                <div class="step-head">
+                  <div class="step-kicker" data-i18n="setup.step1">STEP 1</div>
+                  <h3><span data-i18n="resolve.title">Detect DaVinci Resolve</span></h3>
+                  <div class="step-meta"><span class="step-state" aria-live="polite"></span></div>
+                </div>
+                <p data-i18n="resolve.body">Chat in DaVinci uses Blackmagic's ResolveMCP bundled with DaVinci Resolve. Nothing is installed into Resolve, and no Screen Recording, Accessibility or Full Disk Access permission is required.</p>
+                <div class="step-actions">
+                  <button class="btn btn-primary" id="probeResolve" type="button" data-i18n="resolve.check"><svg class="ico" viewBox="0 0 24 24"><use href="#i-pulse" /></svg>Check Resolve</button>
+                  <span class="chosen" id="resolveSummary" data-i18n="status.checking">Checking…</span>
+                </div>
+                <div class="facts compact" id="resolveFacts"></div>
+              </div>
+            </li>
+
+            <li class="step is-optional" data-step="locations">
+              <div class="step-mark"><svg class="ico tick" viewBox="0 0 24 24"><use href="#i-check" /></svg></div>
+              <div class="step-body">
+                <div class="step-head">
+                  <div class="step-kicker" data-i18n="setup.step2">STEP 2</div>
+                  <h3><span data-i18n="locations.title">Choose project locations</span><span class="tag" data-i18n="common.recommended">recommended</span></h3>
+                  <div class="step-meta"><span class="step-state" aria-live="polite"></span></div>
+                </div>
+                <p data-i18n="locations.body">
+                  Approve the folders that protected workflows may read or write. Source media remains immutable by default.
+                  The direct official connector is not constrained by these folders.
+                </p>
+                <div class="step-actions">
+                  <button class="btn btn-primary" id="addLocation" type="button" data-i18n="locations.choose"><svg class="ico" viewBox="0 0 24 24"><use href="#i-folder" /></svg>Choose folder</button>
+                  <span class="chosen" id="locationSummary" data-i18n="common.noneYet">None yet</span>
+                </div>
+                <div class="locations" id="locationList"></div>
+              </div>
+            </li>
+
+            <li class="step" data-step="tunnel">
+              <div class="step-mark"><svg class="ico tick" viewBox="0 0 24 24"><use href="#i-check" /></svg></div>
+              <div class="step-body">
+                <div class="step-head">
+                  <div class="step-kicker" data-i18n="setup.step3">STEP 3</div>
+                  <h3><span data-i18n="tunnel.title">Create tunnels</span></h3>
+                  <div class="step-meta"><span class="step-state" aria-live="polite"></span></div>
+                </div>
+                <p data-i18n="tunnel.body">Create a protected Workflow tunnel and optionally keep the existing Raw tunnel for direct official access. Both use the same local app and API key.</p>
+                <div class="step-actions">
+                  <button class="btn btn-primary" type="button" data-link="https://platform.openai.com/settings/organization/tunnels" data-i18n="tunnel.open"><svg class="ico" viewBox="0 0 24 24"><use href="#i-out" /></svg>Open Tunnels</button>
+                </div>
+                <div class="field">
+                  <label for="workflowTunnelName" data-i18n="tunnel.workflowName">Workflow tunnel name — recommended</label>
+                  <div class="row-inline"><input id="workflowTunnelName" readonly /><button class="btn copy" data-copy="workflowTunnelName" type="button" data-i18n="common.copy"><svg class="ico" viewBox="0 0 24 24"><use href="#i-copy" /></svg>Copy</button></div>
+                </div>
+                <div class="field">
+                  <label for="workflowTunnelDescription" data-i18n="tunnel.description">Description</label>
+                  <div class="row-inline"><input id="workflowTunnelDescription" readonly /><button class="btn copy" data-copy="workflowTunnelDescription" type="button" data-i18n="common.copy"><svg class="ico" viewBox="0 0 24 24"><use href="#i-copy" /></svg>Copy</button></div>
+                </div>
+                <div class="field">
+                  <label for="workflowTunnelId" data-i18n="tunnel.workflowId">Workflow Tunnel ID — protected connector</label>
+                  <input id="workflowTunnelId" type="text" spellcheck="false" autocomplete="off" pattern="tunnel_[0-9a-f]{32}" placeholder="tunnel_0123456789abcdef0123456789abcdef" />
+                </div>
+                <div class="field">
+                  <label for="tunnelName" data-i18n="tunnel.rawName">Raw tunnel name — advanced/direct</label>
+                  <div class="row-inline"><input id="tunnelName" readonly /><button class="btn copy" data-copy="tunnelName" type="button" data-i18n="common.copy"><svg class="ico" viewBox="0 0 24 24"><use href="#i-copy" /></svg>Copy</button></div>
+                </div>
+                <div class="field">
+                  <label for="tunnelId" data-i18n="tunnel.rawId">Raw Tunnel ID — existing direct connector</label>
+                  <input id="tunnelId" type="text" spellcheck="false" autocomplete="off" pattern="tunnel_[0-9a-f]{32}" placeholder="tunnel_0123456789abcdef0123456789abcdef" />
+                </div>
+              </div>
+            </li>
+
+            <li class="step" data-step="key">
+              <div class="step-mark"><svg class="ico tick" viewBox="0 0 24 24"><use href="#i-check" /></svg></div>
+              <div class="step-body">
+                <div class="step-head">
+                  <div class="step-kicker" data-i18n="setup.step4">STEP 4</div>
+                  <h3><span data-i18n="key.title">Create an API key</span></h3>
+                  <div class="step-meta"><span class="step-state" aria-live="polite"></span></div>
+                </div>
+                <p data-i18n="key.body">Open API Keys and create one key for Chat in DaVinci.</p>
+                <div class="step-actions">
+                  <button class="btn btn-primary" type="button" data-link="https://platform.openai.com/settings/organization/api-keys" data-i18n="key.open"><svg class="ico" viewBox="0 0 24 24"><use href="#i-out" /></svg>Open API keys</button>
+                </div>
+                <div class="setup-options">
+                  <p data-i18n="key.guide">Use these options:</p>
+                  <div class="setup-option"><b data-i18n="key.fieldOwner">Owned by</b><span data-i18n="key.owner">You</span></div>
+                  <div class="setup-option"><b data-i18n="key.fieldName">Name</b><span data-i18n="key.name">Chat in DaVinci (optional)</span></div>
+                  <div class="setup-option"><b data-i18n="key.fieldProject">Project</b><span data-i18n="key.project">A project in the same OpenAI organization as the Tunnel</span></div>
+                  <div class="setup-option"><b data-i18n="key.fieldPermissions">Permissions</b><span data-i18n="key.permissions">All</span></div>
+                  <p class="hint" data-i18n="key.copyOnce">Create it, copy the key, then paste it below.</p>
+                </div>
+                <div class="field">
+                   <label for="apiKey" data-i18n="key.label">OpenAI API key</label>
+                  <input id="apiKey" type="password" spellcheck="false" placeholder="sk-…" autocomplete="off" />
+                  <p class="hint" id="apiKeyState"></p>
+                  <div class="step-actions"><button class="btn btn-danger" id="removeApiKey" type="button" data-i18n="key.remove">Remove stored API key</button></div>
+                </div>
+              </div>
+            </li>
+
+            <li class="step" data-step="connect">
+              <div class="step-mark"><svg class="ico tick" viewBox="0 0 24 24"><use href="#i-check" /></svg></div>
+              <div class="step-body">
+                <div class="step-head">
+                  <div class="step-kicker" data-i18n="setup.step5">STEP 5</div>
+                  <h3><span data-i18n="connect.title">Start the tunnel</span></h3>
+                  <div class="step-meta"><span class="step-state" aria-live="polite"></span></div>
+                </div>
+                <p data-i18n="connect.body">Chat in DaVinci automatically starts its bundled tunnel-client here. It securely carries the OpenAI Tunnel to Blackmagic ResolveMCP over local stdio. You do not need to install it, choose a path or configure Terminal.</p>
+                <div class="step-actions">
+                  <button class="btn btn-primary" id="wizConnect" type="button" data-i18n="common.connect">Connect</button>
+                  <span class="chosen" id="wizStatus"></span>
+                </div>
+                <div class="facts compact" id="tunnelFacts"></div>
+              </div>
+            </li>
+
+            <li class="step" data-step="chatgpt">
+              <div class="step-mark"><svg class="ico tick" viewBox="0 0 24 24"><use href="#i-check" /></svg></div>
+              <div class="step-body">
+                <div class="step-head">
+                  <div class="step-kicker" data-i18n="setup.step6">STEP 6</div>
+                  <h3><span data-i18n="chatgpt.title">Add it in ChatGPT</span></h3>
+                  <div class="step-meta"><span class="step-state" aria-live="polite"></span></div>
+                </div>
+                <p data-i18n="chatgpt.body">Enable Developer mode, open Apps, choose New plugin, then match the options below.</p>
+                <div class="step-actions">
+                  <button class="btn btn-primary" type="button" data-link="https://chatgpt.com/#settings/Apps" data-i18n="chatgpt.openApps"><svg class="ico" viewBox="0 0 24 24"><use href="#i-out" /></svg>Open Apps</button>
+                </div>
+                <div class="connector">
+                  <div class="connector-head"><h4>Chat in DaVinci Workflow</h4><span class="tag" data-i18n="common.recommendedConnector">recommended</span></div>
+                  <div class="field"><label for="workflowConnectorName" data-i18n="connector.name">Connector name</label><div class="row-inline"><input id="workflowConnectorName" readonly /><button class="btn copy" data-copy="workflowConnectorName" type="button" data-i18n="common.copy"><svg class="ico" viewBox="0 0 24 24"><use href="#i-copy" /></svg>Copy</button></div></div>
+                  <div class="field"><label for="workflowConnectorDescription" data-i18n="connector.description">Description</label><div class="row-inline"><input id="workflowConnectorDescription" readonly /><button class="btn copy" data-copy="workflowConnectorDescription" type="button" data-i18n="common.copy"><svg class="ico" viewBox="0 0 24 24"><use href="#i-copy" /></svg>Copy</button></div></div>
+                  <p class="hint" data-i18n="chatgpt.workflowSafe">Protected Workflow exposes only the app's bounded workflow tools.</p>
+                  <p class="hint" data-i18n="chatgpt.workflowTest">After creating it, ask ChatGPT to call status through Chat in DaVinci Workflow, then confirm here.</p>
+                  <div class="step-actions"><button class="btn btn-primary" id="confirmWorkflowChatgpt" type="button" data-i18n="chatgpt.workflowConfirm">Confirm protected Workflow test</button><span class="chosen" id="workflowChatgptState"></span></div>
+                </div>
+                <div class="connector">
+                  <div class="connector-head"><h4>Chat in DaVinci</h4><span class="tag" data-i18n="common.raw">raw</span></div>
+                  <div class="field"><label for="connectorName" data-i18n="connector.name">Connector name</label><div class="row-inline"><input id="connectorName" readonly /><button class="btn copy" data-copy="connectorName" type="button" data-i18n="common.copy"><svg class="ico" viewBox="0 0 24 24"><use href="#i-copy" /></svg>Copy</button></div></div>
+                  <div class="field"><label for="connectorDescription" data-i18n="connector.description">Description</label><div class="row-inline"><input id="connectorDescription" readonly /><button class="btn copy" data-copy="connectorDescription" type="button" data-i18n="common.copy"><svg class="ico" viewBox="0 0 24 24"><use href="#i-copy" /></svg>Copy</button></div></div>
+                  <p class="hint" data-i18n="chatgpt.rawWarning">Raw access includes run_script and run_script_unsafe. Project locations do not restrict it.</p>
+                  <p class="hint" data-i18n="chatgpt.test">After creating it, ask ChatGPT to read the DaVinci Resolve status, then confirm here.</p>
+                  <div class="step-actions"><button class="btn btn-primary" id="confirmChatgpt" type="button" data-i18n="chatgpt.confirm">I tested get_resolve_status</button><span class="chosen" id="chatgptState"></span></div>
+                </div>
+                <div class="setup-options">
+                  <p data-i18n="chatgpt.guide">Use these options:</p>
+                  <div class="setup-option"><b data-i18n="chatgpt.fieldIcon">Icon</b><span data-i18n="chatgpt.icon">Optional</span></div>
+                  <div class="setup-option"><b data-i18n="chatgpt.fieldConnection">Connection</b><span data-i18n="chatgpt.connection">Tunnel</span></div>
+                  <div class="setup-option"><b data-i18n="chatgpt.fieldTunnel">Available tunnel</b><span data-i18n="chatgpt.tunnel">Select the tunnel you created above</span></div>
+                  <div class="setup-option"><b data-i18n="chatgpt.fieldAuth">Authentication</b><span data-i18n="chatgpt.auth">OAuth</span></div>
+                  <div class="setup-option"><b data-i18n="chatgpt.fieldAdvanced">Advanced OAuth</b><span data-i18n="chatgpt.advanced">Leave unchanged</span></div>
+                  <div class="setup-option"><b data-i18n="chatgpt.fieldRisk">Risk confirmation</b><span data-i18n="chatgpt.risk">Check “I understand and wish to continue”</span></div>
+                </div>
+              </div>
+            </li>
+          </ol>
+
+          </div>
+        </section>
+
+        <section class="panel settings-panel" data-panel="settings">
+          <div class="sheet">
+          <div class="workspace-heading-row settings-title-row">
+            <div class="settings-heading"><h1 data-i18n="settings.title">Settings</h1><p data-i18n="settings.subtitle">Manage Chat in DaVinci preferences and diagnostics.</p></div>
+          </div>
+
+          <div class="settings-preferences">
+            <section class="workflow-card settings-card">
+              <div class="workflow-card-head"><div><h2 data-i18n="advanced.connection">Connection</h2><p data-i18n="settings.connectionPrefsBody">Choose how Chat in DaVinci reconnects when the app starts.</p></div></div>
+              <div class="settings-card-body">
+                <div class="settings-value settings-row"><span data-i18n="advanced.method">Method</span><strong data-i18n="advanced.methodValue">OpenAI Secure MCP Tunnel (recommended)</strong></div>
+                <label class="check-row settings-row"><span data-i18n="advanced.autoConnect">Connect automatically on launch</span><input id="autoConnectOnLaunch" type="checkbox" /></label>
+              </div>
+            </section>
+
+            <section class="workflow-card settings-card">
+              <div class="workflow-card-head"><div><h2 data-i18n="advanced.appearance">Appearance</h2><p data-i18n="settings.appearancePrefsBody">Language and navigation preferences for the app interface.</p></div></div>
+              <div class="settings-card-body">
+                <div class="settings-control-row settings-row">
+                  <span data-i18n="language.label">Language</span>
+                  <div class="language-control" id="languageControl">
+                    <button class="btn language-trigger" id="languageButton" type="button" aria-haspopup="menu" aria-expanded="false" aria-label="Language" data-i18n-aria-label="language.label">
+                      <svg class="ico" viewBox="0 0 24 24"><use href="#i-language" /></svg><span id="languageButtonLabel" data-i18n="language.system">Follow System</span>
+                    </button>
+                    <div class="language-popover" id="languageOptions" role="menu" hidden>
+                      <button class="language-option" type="button" role="menuitemradio" data-language="system" data-i18n="language.system">Follow System</button>
+                      <button class="language-option" type="button" role="menuitemradio" data-language="en" data-i18n="language.english">English</button>
+                      <button class="language-option" type="button" role="menuitemradio" data-language="zh-CN" data-i18n="language.chinese">Simplified Chinese</button>
+                    </div>
+                  </div>
+                </div>
+                <label class="check-row settings-row"><span data-i18n="advanced.sidebarNavigation">Use sidebar navigation</span><input id="navigationLayoutSidebar" type="checkbox" /></label>
+              </div>
+            </section>
+
+            <section class="workflow-card settings-card">
+              <div class="workflow-card-head"><div><h2 data-i18n="advanced.background">Background</h2><p data-i18n="settings.backgroundPrefsBody">Control launch, menu bar and window-close behavior.</p></div></div>
+              <div class="settings-card-body">
+                <label class="check-row settings-row"><span data-i18n="advanced.keepRunning">Keep connected after closing the window</span><input id="keepRunningOnWindowClose" type="checkbox" /></label>
+                <label class="check-row settings-row"><span data-i18n="advanced.menuBar">Show menu bar icon</span><input id="showMenuBarIcon" type="checkbox" /></label>
+                <label class="check-row settings-row"><span data-i18n="advanced.login">Launch Chat in DaVinci at login</span><input id="launchAtLogin" type="checkbox" /></label>
+              </div>
+            </section>
+
+            <section class="workflow-card settings-card">
+              <div class="workflow-card-head"><div><h2 data-i18n="advanced.diagnostics">Diagnostics</h2><p data-i18n="settings.appDiagnosticsBody">Show local transport details when deeper troubleshooting is needed.</p></div></div>
+              <div class="settings-card-body">
+                <label class="check-row settings-row"><span data-i18n="advanced.developer">Developer mode</span><input id="developerMode" type="checkbox" /></label>
+                <div class="settings-value settings-row"><span data-i18n="advanced.clientVersion">Built-in transport</span><strong id="advancedTunnelVersion"></strong></div>
+                <div id="developerDetails" class="developer-details" hidden>
+                  <div class="settings-value"><span>ResolveMCP</span><strong id="developerMcpPath"></strong></div>
+                  <div class="settings-value"><span>tunnel-client</span><strong id="developerTunnelPath"></strong></div>
+                  <div class="settings-value"><span data-i18n="advanced.health">Local health endpoint</span><strong id="developerHealth"></strong></div>
+                </div>
+              </div>
+            </section>
+          </div>
+
+          <section class="settings-diagnostics">
+            <div class="workspace-heading-row diagnostics-heading-row">
+              <div><h2 data-i18n="settings.diagnosticsTitle">Protected connection diagnostics</h2><p data-i18n="settings.diagnosticsBody">Resolve, MCP schema and current protected-surface evidence.</p></div>
+              <button class="btn" type="button" data-refresh-workflow data-i18n="workflow.refresh">Refresh</button>
+            </div>
+            <div class="workflow-grid settings-workflow-grid">
+              <section class="workflow-card">
+                <div class="workflow-card-head"><div><h2 data-i18n="workflow.connection">Connection inspection</h2><p data-i18n="workflow.connectionBody">Resolve, MCP protocol and the current upstream schema snapshot.</p></div><span class="pill" id="workflowConnectionState"></span></div>
+                <div class="facts compact" id="workflowConnectionFacts"></div>
+              </section>
+              <section class="workflow-card">
+                <div class="workflow-card-head"><div><h2 data-i18n="workflow.capabilities">Capability inspection</h2><p data-i18n="workflow.capabilitiesBody">The Raw tool count and the tools exposed by the protected workflow surface.</p></div><span class="pill" id="workflowCapabilityState"></span></div>
+                <div class="facts compact" id="workflowCapabilityFacts"></div>
+              </section>
+              <section class="workflow-card workflow-card-wide">
+                <div class="workflow-card-head"><div><h2 data-i18n="workflow.safety">Safety inspection</h2><p data-i18n="workflow.safetyBody">Versioned registry metadata for the current protected Project preflight workflow.</p></div><span class="pill" id="workflowSafetyState"></span></div>
+                <div class="facts compact workflow-preflight-facts" id="workflowSafetyFacts"></div>
+              </section>
+            </div>
+          </section>
+
+          </div>
+        </section>
+      </main>
+    </div>
+    <script type="module" src="./main.ts"></script>
+  </body>
+</html>

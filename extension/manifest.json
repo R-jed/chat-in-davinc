@@ -1,0 +1,82 @@
+{
+  "manifest_version": 3,
+  "name": "__MSG_extensionName__",
+  "default_locale": "en",
+  "version": "0.1.0",
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAqoMbMmBOTMN+rJLaWfrYqSzGkuMdRIWMnU0F34Up/jRS1pf15sm8uzgk25CMrpm3LoMQlOdkfOJU2KIdWT/xKTYVGFJUOfXf82AH5Sn8b2A9GAXhUJFM08THfyOY2LvS+ZfbgaY6jZ4hAfn6/4r+p/YNU421RgFUECjdo9Pz0+HYiukka8nChnhqBiv1UQ95dAJ0zqSai/u1oAeJbvN3b9azXfU3RdYps/ABmcz40p4uA0/EO8PgeObeYYa3jDxog9s5P/h6Wt4ZRB2+KbM2BRKoaKkwU0y40v9vcD12tJhZZF0HmA1vtGk0hYpzNaCEVfWdS+0wC/R1t0dCTtsubwIDAQAB",
+  "description": "__MSG_extensionDescription__",
+  "minimum_chrome_version": "116",
+  "permissions": [
+    "storage",
+    "scripting",
+    "alarms"
+  ],
+  "host_permissions": [
+    "https://chatgpt.com/*",
+    "https://chat.openai.com/*",
+    "http://127.0.0.1:8775/*",
+    "http://127.0.0.1:8776/*",
+    "http://127.0.0.1:8777/*",
+    "http://127.0.0.1:8778/*",
+    "http://127.0.0.1:8779/*"
+  ],
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://chatgpt.com/*",
+        "https://chat.openai.com/*"
+      ],
+      "js": [
+        "i18n.js",
+        "chatgpt-dom.js",
+        "content.js"
+      ],
+      "css": [
+        "overlay.css"
+      ],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "https://chatgpt.com/*",
+        "https://chat.openai.com/*"
+      ],
+      "js": [
+        "fiber.js"
+      ],
+      "world": "MAIN",
+      "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "https://chatgpt.com/*",
+        "https://chat.openai.com/*"
+      ],
+      "js": [
+        "usage.js"
+      ],
+      "world": "MAIN",
+      "run_at": "document_start"
+    }
+  ],
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Chat in DaVinci",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  }
+}

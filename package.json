@@ -1,0 +1,40 @@
+{
+  "name": "chat-in-davinci",
+  "version": "0.1.0",
+  "description": "Dedicated ChatGPT bridge and controlled workflow layer for DaVinci Resolve.",
+  "private": true,
+  "license": "UNLICENSED",
+  "main": "out/main/index.js",
+  "scripts": {
+    "dev": "electron-vite dev",
+    "build": "electron-vite build",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "test": "vitest run --dir test",
+    "test:ui-policy": "vitest run gate/ui-policy.test.ts",
+    "test:interaction": "vitest run gate/interaction-policy.test.ts",
+    "test:concurrency": "vitest run gate/workflow-concurrency.test.ts",
+    "test:policy": "npm run test:ui-policy && npm run test:interaction && npm run test:concurrency",
+    "test:live": "CID_LIVE_RESOLVE=1 vitest run test/resolve-live.test.ts",
+    "test:broker:live": "CID_LIVE_RESOLVE_BROKER=1 vitest run test/resolve-broker-live.test.ts",
+    "test:gateway:live": "CID_LIVE_RESOLVE_GATEWAY=1 vitest run test/resolve-gateway-live.test.ts",
+    "verify": "npm run typecheck && npm run test:policy && npm test && npm run build",
+    "icon:mac": "zsh scripts/build-macos-icon.sh",
+    "fetch:tunnel": "node scripts/fetch-tunnel-client.mjs",
+    "package:mac": "npm run verify && npm run icon:mac && npm run fetch:tunnel && electron-builder --mac dmg --arm64 --config electron-builder.yml --publish never"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.0",
+    "electron": "43.4.1",
+    "electron-builder": "^26.16.1",
+    "electron-vite": "^5.0.0",
+    "typescript": "^7.0.2",
+    "vite": "^7.3.6",
+    "vitest": "^4.1.10"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/node": "^2.0.0",
+    "@modelcontextprotocol/server": "^2.0.0",
+    "lucide": "^1.44.0",
+    "zod": "^4.5.4"
+  }
+}

@@ -1,0 +1,220 @@
+{
+  "version": 2,
+  "source": "https://github.com/raunofreiberg/interfaces",
+  "exceptions": [
+    {
+      "id": "zoom-notice-motion",
+      "layer": "design-exception",
+      "rule": "motion.max-duration",
+      "selector": ".zoom-notice",
+      "property": "transition",
+      "current": "opacity .28s cubic-bezier(.22, 1, .36, 1), transform .36s cubic-bezier(.22, 1, .36, 1), filter .28s ease",
+      "max": 360,
+      "reason": "User explicitly requested a longer, more graceful zoom-notice entrance and exit animation."
+    },
+    {
+      "id": "topbar-material-motion",
+      "layer": "design-exception",
+      "rule": "motion.max-duration",
+      "selector": ".topbar",
+      "property": "transition",
+      "current": "background .28s cubic-bezier(.22, 1, .36, 1), backdrop-filter .28s ease",
+      "max": 280,
+      "reason": "Preserve the current approved topbar material response without changing the visible UI."
+    },
+    {
+      "id": "workspace-tab-indicator-motion",
+      "layer": "design-exception",
+      "rule": "motion.max-duration",
+      "selector": ".workspace-tab-indicator",
+      "property": "transition",
+      "current": "transform .26s cubic-bezier(.22, 1, .36, 1), width .26s cubic-bezier(.22, 1, .36, 1), opacity .14s ease",
+      "max": 260,
+      "reason": "Preserve the current workspace indicator timing while the UI is held visually stable."
+    },
+    {
+      "id": "settings-icon-motion",
+      "layer": "design-exception",
+      "rule": "motion.max-duration",
+      "selector": ".utility-button .settings-icon",
+      "property": "transition",
+      "current": "transform .42s cubic-bezier(.2, 1.45, .3, 1)",
+      "max": 420,
+      "reason": "Preserve the existing settings-icon hover treatment while the UI is held visually stable."
+    },
+    {
+      "id": "connection-signal-progress-motion",
+      "layer": "design-exception",
+      "rule": "motion.max-duration",
+      "selector": ".connection-signal.is-connecting .signal-bar::after",
+      "property": "animation",
+      "current": "connection-signal-fill 2.4s ease-in-out infinite",
+      "max": 2400,
+      "reason": "User explicitly requested a slow staggered four-bar fill animation to communicate an in-progress connection state at a glance."
+    },
+    {
+      "id": "zoom-control-light-glyph",
+      "layer": "design-exception",
+      "rule": "typography.min-font-weight",
+      "selector": ".zoom-control-button",
+      "property": "font-weight",
+      "current": "300",
+      "reason": "Preserve the current optical weight of the minus and plus glyphs."
+    },
+    {
+      "id": "zoom-notice-blur-scale",
+      "layer": "design-exception",
+      "rule": "optimization.filled-blur-scale",
+      "selector": ".zoom-notice",
+      "property": "filter",
+      "current": [
+        ".zoom-notice|filter=blur(.35px)",
+        ".zoom-notice.is-visible|filter=blur(0)"
+      ],
+      "reason": "Preserve the current user-reviewed zoom-notice animation appearance."
+    },
+    {
+      "id": "zoom-notice-compositor-transform",
+      "layer": "design-exception",
+      "rule": "optimization.gpu-promotion",
+      "selector": ".zoom-notice",
+      "property": "transform",
+      "current": [
+        ".zoom-notice|transform=translate3d(0, -7px, 0) scale(.988)",
+        ".zoom-notice.is-visible|transform=translate3d(0, 0, 0) scale(1)"
+      ],
+      "reason": "Preserve the current translate3d animation path; changing compositor behavior requires measured evidence and a visual pass."
+    },
+    {
+      "id": "topbar-backdrop-blur",
+      "layer": "design-exception",
+      "rule": "optimization.backdrop-blur",
+      "selector": ".topbar",
+      "property": "backdrop-filter",
+      "current": [
+        ".topbar|backdrop-filter=blur(16px) saturate(82%)",
+        ".topbar|-webkit-backdrop-filter=blur(16px) saturate(82%)",
+        ".topbar:hover|backdrop-filter=blur(16px) saturate(88%)",
+        ".topbar:hover|-webkit-backdrop-filter=blur(16px) saturate(88%)"
+      ],
+      "reason": "Preserve the current topbar material appearance; performance changes require profiling evidence."
+    },
+    {
+      "id": "desktop-explicit-setup-submit",
+      "layer": "design-exception",
+      "rule": "interaction.form-submit",
+      "selector": "#wizard",
+      "property": "submit-trigger",
+      "current": "ol#wizard + #wizConnect[type=button] + click + no-form-submit",
+      "reason": "Keep connection as an explicit desktop action rather than adding a new Enter-to-connect behavior."
+    },
+    {
+      "id": "desktop-interactive-text-selection",
+      "layer": "design-exception",
+      "rule": "interaction.user-select",
+      "selector": "interactive-controls",
+      "property": "user-select",
+      "current": "native",
+      "reason": "Do not change current text-selection behavior solely to satisfy a web checklist."
+    },
+    {
+      "id": "desktop-fixed-type-scale",
+      "layer": "design-exception",
+      "rule": "typography.fluid-clamp",
+      "selector": ":root",
+      "property": "--type-*",
+      "current": [
+        "--type-caption=.8462rem",
+        "--type-small=.9231rem",
+        "--type-body=1rem",
+        "--type-subhead=1.0769rem",
+        "--type-section=1.2308rem",
+        "--type-title=1.8462rem"
+      ],
+      "reason": "The macOS app has a bounded window size and explicit interface zoom; preserve the current proportional type scale while allowing the imported base UI size to set the rem baseline."
+    },
+    {
+      "id": "current-numeric-spacing",
+      "layer": "design-exception",
+      "rule": "typography.tabular-nums",
+      "selector": "numeric-content",
+      "property": "font-variant-numeric/font-feature-settings",
+      "current": "normal",
+      "reason": "Preserve current numeric metrics until a visual pass explicitly approves tabular figures."
+    },
+    {
+      "id": "native-selection-colors",
+      "layer": "design-exception",
+      "rule": "design.selection",
+      "selector": "::selection",
+      "property": "selection-style",
+      "current": "native",
+      "reason": "Preserve the platform selection appearance rather than introducing a new visible design treatment."
+    },
+    {
+      "id": "language-menu-click-timing",
+      "layer": "design-exception",
+      "rule": "accessibility.dropdown-mousedown",
+      "selector": "#languageButton",
+      "property": "event-listener",
+      "current": "click",
+      "reason": "Preserve the existing click timing while adding keyboard navigation without changing pointer behavior."
+    },
+    {
+      "id": "workspace-tab-hit-gap",
+      "layer": "design-exception",
+      "rule": "interaction.dead-area",
+      "selector": ".workspace-tabs",
+      "property": "gap",
+      "current": [
+        "4px",
+        "2px",
+        "1px"
+      ],
+      "reason": "Preserve the current approved tab spacing; changing hit geometry requires a visual interaction pass."
+    },
+    {
+      "id": "current-global-error-dialogs",
+      "layer": "design-exception",
+      "rule": "design.feedback-location",
+      "selector": "window.alert",
+      "property": "window.alert(argument)",
+      "current": [
+        "unwrap|localizeRuntimeText(result.error)",
+        "refreshWorkflowPlans|localizeRuntimeText(reply.error)",
+        "refreshWorkflowPanel|localizeRuntimeText(error)",
+        "refreshWorkflowPanel|localizeRuntimeText(preflightReply.error)",
+        "refreshMediaPanel|localizeRuntimeText(reply.error)",
+        "refreshMediaPanel|localizeRuntimeText(linkReply.error)",
+        "refreshMediaClip|localizeRuntimeText(clipReply.error)",
+        "refreshMediaClip|localizeRuntimeText(linkReply.error)",
+        "refreshEditPanel|localizeRuntimeText(reply.error)",
+        "refreshEditPanel|localizeRuntimeText(structureReply.error)",
+        "refreshEditPanel|localizeRuntimeText(gapsReply.error)",
+        "refreshEditPanel|localizeRuntimeText(detailError)",
+        "refreshColorPanel|localizeRuntimeText(reply.error)",
+        "refreshFairlightPanel|localizeRuntimeText(reply.error)",
+        "refreshDeliverPanel|localizeRuntimeText(reply.error)"
+      ],
+      "max": 15,
+      "reason": "Preserve the current error-flow behavior until inline error placement is explicitly redesigned and visually reviewed."
+    },
+    {
+      "id": "current-heading-weights",
+      "layer": "design-exception",
+      "rule": "typography.heading-weight",
+      "selector": "heading-tokens",
+      "property": "font-weight",
+      "current": [
+        ".settings-heading h1=620",
+        ".workspace-empty h2=600",
+        ".diagnostics-heading-row h2=620",
+        ".health-heading h2=620",
+        ".step h3=600",
+        ".connector-head h4=600",
+        ".workflow-card-head h2=620"
+      ],
+      "reason": "Preserve the current optical heading weights during the no-visible-change policy pass."
+    }
+  ]
+}

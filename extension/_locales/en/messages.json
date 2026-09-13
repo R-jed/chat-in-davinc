@@ -1,0 +1,8 @@
+{
+  "extensionName": {
+    "message": "Chat in DaVinci companion"
+  },
+  "extensionDescription": {
+    "message": "Records your ChatGPT session into the local Chat in DaVinci app and labels its MCP tool calls with what they actually did."
+  }
+}

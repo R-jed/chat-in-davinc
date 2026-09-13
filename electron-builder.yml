@@ -1,0 +1,29 @@
+appId: com.chatindavinci.app
+productName: Chat in DaVinci
+
+directories:
+  output: release
+
+files:
+  - out/**
+  - package.json
+
+extraResources:
+  - from: resources/tunnel
+    to: tunnel
+    filter:
+      - '**/*'
+
+npmRebuild: false
+compression: maximum
+
+mac:
+  target:
+    - dmg
+  category: public.app-category.video
+  minimumSystemVersion: "13.0"
+  icon: resources/app-icon.icns
+  identity: "Apple Development: 2312991142@qq.com (394Y62YYHS)"
+  timestamp: "none"
+  notarize: false
+  artifactName: Chat-in-DaVinci-macOS-${arch}.${ext}

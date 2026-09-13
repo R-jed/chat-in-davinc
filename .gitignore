@@ -1,0 +1,16 @@
+node_modules/
+out/
+dist/
+release/
+release-test/
+release/
+resources/tunnel/
+resources/app-icon.icns
+resources/app-icon.iconset/
+.DS_Store
+*.log
+coverage/
+
+.env
+.env.local
+*.pem
